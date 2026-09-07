@@ -19,26 +19,26 @@
 - macOS with Rosetta available
 - `make`
 - `greadelf` for optional ELF inspection
+Got it — keep your wording exactly as-is and just frame the section as **official `elfuse` limitations**.
 
- ## Structure
+## Limitations
 
-```
-.
-├── bin/
-│   ├── fasmg
-│   └── elfuse
-├── include/
-│   └── ...
-├── docs/
-│   └── ...
-├── src/
-│   └── hello.asm
-├── build/
-├── Makefile
-└── README.md
-```
+ The following limitations apply to `elfuse`, as described by the official `elfuse` repository:
 
- ## Build
+ `elfuse` runs single Linux user-space processes (and their fork / exec children). It is not a Linux kernel. That framing shapes both what it does and what it explicitly will not do.
+
+ Linux kernel features that have no user-space-syscall analog: namespaces, cgroups, kernel modules, eBPF, io\_uring, KVM, perf events.\
+ Intel Macs. Apple Silicon only (M1 and later).\
+ Hosting a VM from inside a guest. The guest cannot use HVF or KVM.\
+ One guest process tree per elfuse host process. HVF allows one VM per host process; Linux-style fork is implemented by posix\_spawn-ing a fresh elfuse host process and transferring state (see docs/internals.md).\
+ Up to 64 concurrent guest threads per VM (MAX\_THREADS = 64).\
+ The implemented syscall set is src/syscall/dispatch.tbl; anything outside it returns -ENOSYS rather than silently succeeding.\
+ FUTEX\_LOCK\_PI and friends behave as plain mutex acquire / release; true priority-inheritance scheduling is not modeled.\
+ sched\_setaffinity is honored as a no-op (returns the all-CPUs mask); the host scheduler picks the actual CPU.\
+ /proc, /dev, and mount data are synthetic compatibility views, not host pass-throughs.\
+ uname and /proc/version report Linux 6.18 LTS, a floor for version-gated userspace; src/syscall/dispatch.tbl states what is implemented.
+
+## Build
 
 ```
 make
