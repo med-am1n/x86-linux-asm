@@ -10,6 +10,9 @@
 - Official fasmg documentation
 - A simple `Makefile` for building and running programs
 
+## Architecture
+
+![Architecture](architecture.png)
  ## Requirements
 
 - Apple Silicon Mac
