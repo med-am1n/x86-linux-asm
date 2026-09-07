@@ -4,7 +4,8 @@ ROOT := $(CURDIR)
 
 FASMG  := $(ROOT)/bin/fasmg
 ELFUSE := $(ROOT)/bin/elfuse
-INCLUDE := $(ROOT)/include # This is to force fasmg to us the local INCLUDE!
+# This is to force fasmg to us the local INCLUDE!
+INCLUDE := $(ROOT)/include
 
 SRC := src/hello.asm
 OUT := build/hello
